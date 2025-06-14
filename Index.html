@@ -23,9 +23,19 @@
         ctx.fillStyle = "blue"
         ctx.fillRect(x, y, 50, 50)
         
-        if ( y < canvas.height - 50)
+        if (y < canvas.height - 50)
         y += 10;
     }
+    addEventListener('keydown', (tecla)=>{
+        if(tecla.code == "KeyA")
+        x-= 10
+        if(tecla.code == "KeyD")
+        x+= 10
+        if(tecla.code == "KeyW")
+        y-= 100 
+        if(tecla.code == "KeyS")
+        y+= 10 
+    })
     animation();
     
     </script>
