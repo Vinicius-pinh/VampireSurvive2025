@@ -2,6 +2,7 @@
 
 <body>
     <canvas></canvas>
+    
     <script>
         const canvas = document.querySelector("canvas")
         const ctx = canvas.getContext("2d")
@@ -22,7 +23,7 @@
         ctx.fillStyle = "blue"
         ctx.fillRect(x, y, 50, 50)
         
-        if ( y < canvas.height - 100);
+        if ( y < canvas.height - 50)
         y += 10;
     }
     animation();
