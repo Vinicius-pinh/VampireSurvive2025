@@ -1,11 +1,12 @@
 <html>
 
-<body>
+<body style="background-color: black;">
+    <img src="Warrior_Red.png" hidden />
     <canvas></canvas>
-    
     <script>
         const canvas = document.querySelector("canvas")
         const ctx = canvas.getContext("2d")
+        const imagem = document.querySelector('img')
 
         canvas.width = 1024;
         canvas.height = 720;
@@ -13,33 +14,73 @@
         let x = canvas.width / 2;
         let y = canvas.height / 2;
 
+        let frames = 0
+        let colunaFrame = 0;
+        let linhaFrame = 1;
 
-        function animation(){
-        requestAnimationFrame(animation)
-        
-        ctx.fillStyle = "black"
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-       
-        ctx.fillStyle = "blue"
-        ctx.fillRect(x, y, 50, 50)
-        
-        if (y < canvas.height - 50)
-        y += 10;
-    }
-    addEventListener('keydown', (tecla)=>{
-        if(tecla.code == "KeyA")
-        x-= 10
-        if(tecla.code == "KeyD")
-        x+= 10
-        if(tecla.code == "KeyW")
-        y-= 100 
-        if(tecla.code == "KeyS")
-        y+= 10 
-    })
-    animation();
-    
+        const toque = {
+
+        x: null, 
+        y: null
+        }
+        const player = {
+            x: canvas.width /2,
+            y: canvas.height /2
+        }
+
+        function animation() {
+            requestAnimationFrame(animation)
+
+            ctx.fillStyle = "white"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            if(toque.x != null){
+            ctx.fillStyle = "blue";
+            ctx.beginPath()
+            ctx.arc(toque.x, toque.y, 30, 0, Math.PI * 2)
+            ctx.fill()
+
+            const dx = toque.x - player.x;
+            const dy = toque.y - player.y;
+            const angulo = Math.atan2(dy, dx);
+            player.x += Math.cos(angulo);
+            player.y += Math.sin(angulo);
+            }
+
+            const alturaFrame = imagem.height / 8; //8 linha no sprite
+            const larguraFrame = imagem.width / 6  //6 colunas no sprite
+            ctx.drawImage(
+                imagem,                     //imagem para recorte
+                colunaFrame * larguraFrame, //x inicio corte
+                linhaFrame * alturaFrame,   //y inicio corte
+                larguraFrame,               //largura de corte
+                alturaFrame,                //altura de corte,
+                player.x,                        //x para desenho no canvas
+                player.y,                        //y para desenho no canvas
+                larguraFrame,               //largura do desenho no canvas
+                alturaFrame                 //altura do desenho no canvas
+            )
+
+            if (y < canvas.height - 50)
+                y += 10;
+
+            if (frames % 10 == 0) {
+                if (colunaFrame > 4)
+                    colunaFrame = 0
+                else
+                    colunaFrame++
+            }
+
+            frames++
+        }
+
+        addEventListener('touchstart', (evento) => {
+            toque.x = evento.targetTouches[0].clientX;
+            toque.y = evento.targetTouches[0].clientY;
+        })
+
+        animation();
+
     </script>
 </body>
-
 
 </html>
