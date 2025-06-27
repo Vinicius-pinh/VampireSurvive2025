@@ -77,6 +77,31 @@
             toque.x = evento.targetTouches[0].clientX;
             toque.y = evento.targetTouches[0].clientY;
         })
+        
+        addEventListener('touchmove', (evento) => {
+            toque.x = evento.targetTouches[0].clientX;
+            toque.y = evento.targetTouches[0].clientY;
+        })
+        
+        addEventListener('touchend', (evento) => {
+            toque.x = null;
+            toque.y = null;
+        })
+
+        addEventListener('mousedown', (evento) => {
+            toque.x = evento.clientX
+            toque.y = evento.clientY
+        })
+        
+        addEventListener('mousemove', (evento) => {
+            toque.x = evento.clientX;
+            toque.y = evento.clientY;
+        })
+        
+        addEventListener('mouseout', (evento) => {
+            toque.x = null;
+            toque.y = null;
+        })
 
         animation();
 
