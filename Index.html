@@ -11,21 +11,22 @@
         canvas.width = 1024;
         canvas.height = 720;
 
-        let x = canvas.width / 2;
-        let y = canvas.height / 2;
-
         let frames = 0
         let colunaFrame = 0;
         let linhaFrame = 1;
 
         const toque = {
-
-        x: null, 
-        y: null
+            x: null,
+            y: null
         }
         const player = {
-            x: canvas.width /2,
-            y: canvas.height /2
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            velocidade: 5
+        }
+        const inimigo = {
+            x: 500,
+            y: 300
         }
 
         function animation() {
@@ -33,17 +34,18 @@
 
             ctx.fillStyle = "white"
             ctx.fillRect(0, 0, canvas.width, canvas.height)
-            if(toque.x != null){
-            ctx.fillStyle = "blue";
-            ctx.beginPath()
-            ctx.arc(toque.x, toque.y, 30, 0, Math.PI * 2)
-            ctx.fill()
 
-            const dx = toque.x - player.x;
-            const dy = toque.y - player.y;
-            const angulo = Math.atan2(dy, dx);
-            player.x += Math.cos(angulo);
-            player.y += Math.sin(angulo);
+            if (toque.x != null) {
+                ctx.fillStyle = "blue";
+                ctx.beginPath()
+                ctx.arc(toque.x, toque.y, 30, 0, Math.PI * 2)
+                ctx.fill()
+
+                const dx = toque.x - player.x;
+                const dy = toque.y - player.y;
+                const angulo = Math.atan2(dy, dx);
+                player.x += Math.cos(angulo) * player.velocidade;
+                player.y += Math.sin(angulo) * player.velocidade;
             }
 
             const alturaFrame = imagem.height / 8; //8 linha no sprite
@@ -54,14 +56,25 @@
                 linhaFrame * alturaFrame,   //y inicio corte
                 larguraFrame,               //largura de corte
                 alturaFrame,                //altura de corte,
-                player.x,                        //x para desenho no canvas
-                player.y,                        //y para desenho no canvas
+                player.x,                   //x para desenho no canvas
+                player.y,                   //y para desenho no canvas
                 larguraFrame,               //largura do desenho no canvas
                 alturaFrame                 //altura do desenho no canvas
             )
 
-            if (y < canvas.height - 50)
-                y += 10;
+            //verifica colisao com inimigo
+            const tamanhoInimigo = 30;
+            const dx = (player.x + larguraFrame / 2) - inimigo.x;
+            const dy = (player.y + alturaFrame / 2) - inimigo.y;
+            const distanciaEntreEles = Math.hypot(dx, dy);
+
+            if (distanciaEntreEles < tamanhoInimigo)
+                ctx.fillStyle = "red"; //bateuuuuuu
+            else
+                ctx.fillStyle = "green"; //ta safe
+            ctx.beginPath()
+            ctx.arc(inimigo.x, inimigo.y, tamanhoInimigo, 0, Math.PI * 2)
+            ctx.fill()
 
             if (frames % 10 == 0) {
                 if (colunaFrame > 4)
@@ -74,33 +87,34 @@
         }
 
         addEventListener('touchstart', (evento) => {
-            toque.x = evento.targetTouches[0].clientX;
-            toque.y = evento.targetTouches[0].clientY;
+            toque.x = evento.targetTouches[0].clientX
+            toque.y = evento.targetTouches[0].clientY
         })
-        
         addEventListener('touchmove', (evento) => {
-            toque.x = evento.targetTouches[0].clientX;
-            toque.y = evento.targetTouches[0].clientY;
+            toque.x = evento.targetTouches[0].clientX
+            toque.y = evento.targetTouches[0].clientY
         })
-        
         addEventListener('touchend', (evento) => {
-            toque.x = null;
-            toque.y = null;
+            toque.x = null
+            toque.y = null
         })
 
+        let mouseApertado = false
         addEventListener('mousedown', (evento) => {
+            mouseApertado = true
             toque.x = evento.clientX
             toque.y = evento.clientY
         })
-        
         addEventListener('mousemove', (evento) => {
-            toque.x = evento.clientX;
-            toque.y = evento.clientY;
+            if (mouseApertado) {
+                toque.x = evento.clientX
+                toque.y = evento.clientY
+            }
         })
-        
-        addEventListener('mouseout', (evento) => {
-            toque.x = null;
-            toque.y = null;
+        addEventListener('mouseup', (evento) => {
+            mouseApertado = false
+            toque.x = null
+            toque.y = null
         })
 
         animation();
